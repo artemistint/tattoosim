@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Human Loader</title>
+        <script src="https://aframe.io/releases/0.4.0/aframe.min.js"></script>
+        
+        <script src="js/AFrame.DecalComponent.js"></script>
+        <script src="js/THREE.DecalGeometry.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        
+        <script src="js/ShaderSkin.js"></script>
+        <script src="js/skinShader_component.js"></script>
+        <script src="js/shaders/CopyShader.js"></script>
+        <script src="js/postprocessing/EffectComposer.js"></script>
+        <script src="js/postprocessing/ShaderPass.js"></script>
+        <script src="js/shaders/customPhongFragment.js"></script>
+    </head>
+    <body>
+        
+        <script>
+            
+        function fit(num, oldMin, oldMax, newMin, newMax) {
+            var oldRange = (oldMax - oldMin);
+            var newRange = (newMax - newMin);
+            var scaledNum = (((num - oldMin) * newRange) / oldRange) + newMin;
+            return scaledNum;
+        }
+         
+        function clamp(num, min, max) {
+            return Math.max( min, Math.min ( num, max ));
+        }
+            
+        AFRAME.registerComponent('orient', {
+        
+            init: function () {
+                var cam = this.cam = this.el;
+                var horPos = this.horPos = 0;
+                var human = this.human = document.getElementById('target');
+            },
+            
+            tick: function (time) {
+                // MOVE CAMERA
+                var camPos = this.cam.getAttribute('position');
+                var camRot = this.cam.getAttribute('rotation');
+                var y_axis_speed = 0.02;
+                var y_axis_mult;
+                var x_pos, z_pos;
+                
+                var humanRot = this.human.getAttribute('rotation');
+                var human_speed = 2.0;
+                
+                var y_activate = Math.abs(camRot.x);
+                y_activate = Math.pow(y_activate, 2);
+                y_activate = fit(y_activate, 100, 2000, 0, 1);
+                y_activate = clamp(y_activate, 0, 1);
+                
+                var x_activate = Math.abs(camRot.y);
+                x_activate = Math.pow(x_activate, 2);
+                x_activate = fit(x_activate, 100, 2000, 0, 1);
+                x_activate = clamp(x_activate, 0, 1);
+
+                if (camRot.x > 0) {
+                    y_axis_mult = fit(camPos.y, 1.5, 2, 1, 0);
+                    y_axis_mult = clamp(y_axis_mult, 0, 1);
+                    var speed = y_axis_speed * y_axis_mult * y_activate;
+                    this.cam.setAttribute('position', { x: camPos.x, y: camPos.y + speed, z: camPos.z });
+                }
+                
+                if (camRot.x < 0) {
+                    y_axis_mult = fit(camPos.y, 0, 0.5, 0, 1);
+                    y_axis_mult = clamp(y_axis_mult, 0, 1);
+                    var speed = y_axis_speed * y_axis_mult * y_activate;
+                    this.cam.setAttribute('position', { x: camPos.x, y: camPos.y - speed, z: camPos.z });
+                }
+                
+                if (camRot.y > 0) {
+                    var speed = human_speed * x_activate;
+                    this.human.setAttribute('rotation', { x: humanRot.x, y: humanRot.y + speed, z: humanRot.z });
+                }
+                
+                if (camRot.y < 0) {
+                    var speed = human_speed * x_activate;
+                    this.human.setAttribute('rotation', { x: humanRot.x, y: humanRot.y - speed, z: humanRot.z });
+                }
+                
+            }
+        });
+            
+        AFRAME.registerComponent('remove', {
+            init: function () {
+                var entity = this.el;
+                // Click
+                var remove_button = window.parent.$('#remove')[0];
+                remove_button.addEventListener('click', function() {
+                    // Remove
+                    var deleted = false;
+                    var remove = function() {
+                        if (deleted === false) {
+                            entity.parentNode.removeChild(entity);
+                            deleted = true;
+                        }
+                    };
+                    // Listener
+                    entity.addEventListener('raycaster-intersected', remove, false);
+                    setTimeout(function() {
+                        entity.removeEventListener('raycaster-intersected', remove, false);
+                    }, 25); 
+                });
+            }
+        });
+        
+        </script>
+        
+        <a-scene antialias="false" vr-mode-ui="enabled: false">
+            <a-assets>
+                <a-asset-item id="human_obj" src="human_models/female/female_high.OBJ"></a-asset-item>
+            </a-assets>
+            
+            <!-- CAMERA AND RAYCASTER -->
+            <a-camera id="camera" position="0 -0.625 1.5" near="0.001" 
+                      wasd-controls="enabled: false" orient>
+                
+                <a-entity id="raycaster_add"
+                          raycaster="objects: .clickable"
+                          position="0 0 -0.01"
+                          geometry="primitive: ring; radius-inner: 0.000001; radius-outer: 0.0001"
+                          material="color: #e74c3c; shader: flat"
+                          ></a-entity>
+                
+                <a-entity id="raycaster_delete"
+                          raycaster="objects: .removable"
+                          ></a-entity>
+                
+            </a-camera>
+            
+            <!-- LIGHTS AND BG -->
+            <a-entity light="type: ambient; color: #333344"></a-entity>
+            <a-entity light="type: directional; color: #FFF" position="1 0 1"></a-entity>
+            
+            <!-- SKY OPTIONS
+            <a-sky src="img/env/env.jpg" rotation="0 90 0"></a-sky>
+            
+            <a-sky color="#f5f5f5"></a-sky>
+
+            <a-sky color="#a3a3af"></a-sky>
+
+            <a-sky color="#060606"></a-sky>
+            
+            <a-sky color="#1E1C29"></a-sky>
+            -->
+            
+            <a-sky src="img/env/env.jpg" rotation="0 -90 0"></a-sky>
+            
+            <!-- HUMAN AND DECAL -->
+            <a-entity id="target">
+                <a-entity id="human" obj-model="obj: #human_obj" class="clickable"
+                          material="shader: skin" position="0 1 0"></a-entity>
+                <a-entity id="helper" decal></a-entity>
+            </a-entity>
+            
+        </a-scene>
+        
+        <script>
+            
+            // SLIDERS
+            init_slider();
+            function init_slider() {
+                
+                var scale_slider = window.parent.$('#scale_slider')[0];
+                var scaleSliderValue = window.parent.$('#scale_value')[0];
+                scale_slider.noUiSlider.on('update', function( values, handle ) {
+                    helper.setAttribute('decal', {
+                        scale: values[handle] * 0.0025
+                    });
+                });
+                
+                var rotation_slider = window.parent.$('#rotation_slider')[0];
+                var rotationSliderValue = window.parent.$('#rotation_value')[0];
+                rotation_slider.noUiSlider.on('update', function( values, handle ) {
+                    helper.setAttribute('decal', {
+                        rotation: values[handle]
+                    });
+                });
+                
+            }
+            
+            // PLUS AND MINUS
+            var cam = document.getElementById( 'camera' );
+            var plus_button = window.parent.$('#plus')[0];
+            plus_button.addEventListener('click', function() {
+                var camPos = cam.getAttribute('position');
+                if (camPos.z > 0.25) {
+                    cam.setAttribute('position', { x: camPos.x, y: camPos.y, z: camPos.z - 0.25 });
+                }
+            });
+
+            var minus_button = window.parent.$('#minus')[0];
+            minus_button.addEventListener('click', function() {
+                var camPos = cam.getAttribute('position');
+                if (camPos.z < 2) {
+                    cam.setAttribute('position', { x: camPos.x, y: camPos.y, z: camPos.z + 0.25 });
+                }
+            });
+            
+            var hide_button = window.parent.$('#hide')[0];
+            hide_button.addEventListener('click', function() {
+                var helper = document.getElementById('helper');
+                var cursor = document.getElementById('raycaster_add');
+                helper.setAttribute('visible', !helper.getAttribute('visible'));
+                cursor.setAttribute('visible', !cursor.getAttribute('visible'));
+            });
+            
+            var trash_button = window.parent.$('#trash')[0];
+            trash_button.addEventListener('click', function() {
+                $('.removable').remove();
+            });
+            
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" type="text/css" href="css/jquery.fullPage.css"/>
+        <link rel="stylesheet" type="text/css" href="css/button.min.css">
+        <link rel="stylesheet" type="text/css" href="css/icon.min.css">
+        <link rel="stylesheet" type="text/css" href="css/nouislider.min.css">
+        <link rel="stylesheet" type="text/css" href="css/dropzone.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css"/>
+        
+        <title>Tattoo Designer</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.fullPage.min.js"></script>
+        <script src="js/nouislider.min.js"></script>
+        <script src="js/dropzone.js"></script>
+        
+    </head>
+    
+    <body>
+        
+        <div id="fullpage">
+            <div class="section" id="section_0"></div>
+            
+            <div class="section" id="section_1">
+            
+                <!-- GUI START -->
+                <div id="gui">
+
+                    <div class="container">
+                        <button class="ui button" id="plus">
+                            <i class="black zoom icon"></i>
+                        </button>
+                        <button class="ui button" id="minus">
+                            <i class="black zoom out icon"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="container">
+                        <button class="ui button" id="add">
+                            <i class="black add square icon"></i>
+                        </button>
+                        <button class="ui button" id="remove">
+                            <i class="black minus square icon"></i>
+                        </button>
+                    </div>
+
+                    <div class="container">
+
+                        <button class="ui button transform" disabled>
+                            <i class="black expand icon"></i>
+                        </button>
+                        <div class="sliders" id="scale_slider"></div>
+
+                        <button class="ui button transform" disabled>
+                            <i class="black refresh icon"></i>
+                        </button>
+                        <div class="sliders" id="rotation_slider"></div>
+
+                    </div>
+                    
+                    <div class="container image">
+                        <form id="dropzone" action="" class="dropzone needsclick dz-clickable">
+                            <i class="black cloud upload icon"></i>
+                            <div class="dz-message needsclick">Drop image here or click to upload</div>
+                        </form>
+                    </div>
+
+                    <div class="container">
+                        <button class="ui button" id="hide">
+                            <i class="black hide icon"></i>
+                        </button>
+                        <button class="ui button" id="trash">
+                            <i class="black trash outline icon"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+                <!-- GUI END -->
+                
+                <div id="aframe">
+                    <iframe id="iframe" src="/aframe/aframe_tattoo.html"></iframe>
+                </div>
+                    
+            </div>
+
+            <div class="section fp-auto-height" id="section_2">
+                <div class="footer"></div>
+            </div>
+        </div>
+            
+        <script>
+            
+            // INIT
+            var anchorIndex;
+            
+            $(document).ready(function() {
+                $('#fullpage').fullpage({
+                    anchors: ['Title', 'Tattoo', 'Footer'],
+                    navigation: true,
+                    navigationPosition: 'right',
+                    navigationTooltips: ['Title', 'Tattoo', 'Footer'],
+                    
+                    afterLoad: function(anchorLink, index){
+                        anchorIndex = index;
+                        if (index == 2) {
+                            console.log("INIT LOAD");
+                        }
+                    }
+                    
+                });
+                
+                var initMoveDelay = 2000;
+                setTimeout(function() {
+                    if (anchorIndex === 1) {
+                        $.fn.fullpage.moveSectionDown();
+                    }
+                }, initMoveDelay);
+                
+            });
+        
+        </script>
+
+        <script>
+            
+            // SLIDERS
+            var scale_slider = document.getElementById('scale_slider');
+            var rotation_slider = document.getElementById('rotation_slider');
+            
+            updateSliderValue = (slider, handle = 0) => {
+                children = slider.getElementsByClassName('noUi-handle');
+                values = slider.noUiSlider.get();
+                i = 0;
+                while (i < children.length) {
+                    if (children.length === 1) {
+                        val = parseInt(values);
+                    }
+                    else {
+                        val = parseInt(values[i]);
+                    }
+                    children[i].dataset.value = val;
+                    i++;
+                }
+            }
+
+            noUiSlider.create(scale_slider, {
+                start: 50,
+                step: 2,
+                padding: 20,
+                connect: [true, false],
+                range: {
+                    'min': -20,
+                    'max': 120
+                }
+            });
+            
+            scale_slider.noUiSlider.on('update', function() {
+                updateSliderValue(scale_slider);
+            });
+                
+            noUiSlider.create(rotation_slider, {
+                start: 0,
+                step: 5,
+                padding: 70,
+                connect: [false, false],
+                range: {
+                    'min': -250,
+                    'max': 250
+                }
+            });
+            
+            rotation_slider.noUiSlider.on('update', function() {
+                updateSliderValue(rotation_slider);
+            });
+        
+            // DROPZONE
+            Dropzone.options.dropzone = {
+                url: "/",
+                accept: function (file, done) {
+                    done('Here you can write anything');
+                    $('.dz-preview').last().toggleClass('dz-error dz-success');
+                    var evt = document.createEvent("CustomEvent");
+                    evt.initCustomEvent("MyEventType", true, true, file);
+                    window.dispatchEvent(evt);
+                },
+                init: function() {
+                    this.on("addedfile", function() {
+                        if (this.files[1]!=null){
+                            this.removeFile(this.files[0]);
+                        }
+                    });
+                }
+            };
+            
+        </script>
+    </body>
+</html>
