@@ -185,13 +185,12 @@
                     cam.setAttribute('position', { x: camPos.x, y: cam_y, z: camPos.z });
                 });
                 
-                var human = document.getElementById('target');
-                
                 var cam_leftright_slider = window.parent.$('#cam_leftright_slider')[0];
                 cam_leftright_slider.noUiSlider.on('update', function( values, handle ) {
-                    var humanRot = human.getAttribute('rotation');
-                    var human_y = values[handle];
-                    human.setAttribute('rotation', { x: humanRot.x, y: human_y, z: humanRot.z });
+                    var target = document.getElementById('target');
+                    var targetRot = target.getAttribute('rotation');
+                    var target_y = values[handle];
+                    target.setAttribute('rotation', { x: targetRot.x, y: target_y, z: targetRot.z });
                  });
                 
             }, delay);
