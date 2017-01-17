@@ -31,58 +31,16 @@
         }
             
         AFRAME.registerComponent('orient', {
-        
             init: function () {
-                var cam = this.cam = this.el;
-                var horPos = this.horPos = 0;
-                var human = this.human = document.getElementById('target');
+                var cam = this.el;
             },
             
-            tick: function (time) {
-                // MOVE CAMERA
-                var camPos = this.cam.getAttribute('position');
-                var camRot = this.cam.getAttribute('rotation');
-                var y_axis_speed = 0.02;
-                var y_axis_mult;
-                var x_pos, z_pos;
+            tick: function(t) {
+                var camRot = cam.getAttribute('rotation');
                 
-                var humanRot = this.human.getAttribute('rotation');
-                var human_speed = 2.0;
-                
-                var y_activate = Math.abs(camRot.x);
-                y_activate = Math.pow(y_activate, 2);
-                y_activate = fit(y_activate, 100, 2000, 0, 1);
-                y_activate = clamp(y_activate, 0, 1);
-                
-                var x_activate = Math.abs(camRot.y);
-                x_activate = Math.pow(x_activate, 2);
-                x_activate = fit(x_activate, 100, 2000, 0, 1);
-                x_activate = clamp(x_activate, 0, 1);
-
-                if (camRot.x > 0) {
-                    y_axis_mult = fit(camPos.y, 1.5, 2, 1, 0);
-                    y_axis_mult = clamp(y_axis_mult, 0, 1);
-                    var speed = y_axis_speed * y_axis_mult * y_activate;
-                    this.cam.setAttribute('position', { x: camPos.x, y: camPos.y + speed, z: camPos.z });
-                }
-                
-                if (camRot.x < 0) {
-                    y_axis_mult = fit(camPos.y, 0, 0.5, 0, 1);
-                    y_axis_mult = clamp(y_axis_mult, 0, 1);
-                    var speed = y_axis_speed * y_axis_mult * y_activate;
-                    this.cam.setAttribute('position', { x: camPos.x, y: camPos.y - speed, z: camPos.z });
-                }
-                
-                if (camRot.y > 0) {
-                    var speed = human_speed * x_activate;
-                    this.human.setAttribute('rotation', { x: humanRot.x, y: humanRot.y + speed, z: humanRot.z });
-                }
-                
-                if (camRot.y < 0) {
-                    var speed = human_speed * x_activate;
-                    this.human.setAttribute('rotation', { x: humanRot.x, y: humanRot.y - speed, z: humanRot.z });
-                }
-                
+                var y_axis = fit(Math.abs(camRot.y), 30, 60, 0, 1);
+                y_axis = 1 - (clamp(y_axis, 0, 1) * 0.005);
+                cam.setAttribute('rotation', { x: camRot.x, y: camRot.y * y_axis, z: camRot.z });
             }
         });
             
@@ -149,6 +107,8 @@
             <a-sky color="#1E1C29"></a-sky>
             -->
             
+            <a-sphere color="#010908" radius="5" material="side: double; shader: flat" opacity="0.75"></a-sphere>
+            
             <a-sky src="img/env/env.jpg" rotation="0 -90 0"></a-sky>
             
             <!-- HUMAN AND DECAL -->
@@ -214,6 +174,27 @@
             trash_button.addEventListener('click', function() {
                 $('.removable').remove();
             });
+            
+            var delay = 250;
+            
+            setTimeout(function() {
+                var cam_updown_slider = window.parent.$('#cam_updown_slider')[0];
+                cam_updown_slider.noUiSlider.on('update', function( values, handle ) {
+                    var camPos = cam.getAttribute('position');
+                    var cam_y = (10 - values[handle]) * 0.2;
+                    cam.setAttribute('position', { x: camPos.x, y: cam_y, z: camPos.z });
+                });
+                
+                var human = document.getElementById('target');
+                
+                var cam_leftright_slider = window.parent.$('#cam_leftright_slider')[0];
+                cam_leftright_slider.noUiSlider.on('update', function( values, handle ) {
+                    var humanRot = human.getAttribute('rotation');
+                    var human_y = values[handle];
+                    human.setAttribute('rotation', { x: humanRot.x, y: human_y, z: humanRot.z });
+                 });
+                
+            }, delay);
             
         </script>
         
