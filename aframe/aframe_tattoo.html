@@ -181,7 +181,7 @@
                 var cam_updown_slider = window.parent.$('#cam_updown_slider')[0];
                 cam_updown_slider.noUiSlider.on('update', function( values, handle ) {
                     var camPos = cam.getAttribute('position');
-                    var cam_y = (10 - values[handle]) * 0.2;
+                    var cam_y = 2 - ((10 - values[handle]) * 0.2);
                     cam.setAttribute('position', { x: camPos.x, y: cam_y, z: camPos.z });
                 });
                 

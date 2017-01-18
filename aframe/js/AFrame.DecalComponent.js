@@ -88,7 +88,7 @@ AFRAME.registerComponent('decal', {
 
         var defines = {};
         defines[ "USE_MAP" ] = "";
-        //defines[ "USE_NORMALMAP" ] = "";
+        defines[ "USE_NORMALMAP" ] = "";
         
         var color_map = loader.load( 'img/colored.jpg' );
         var normal_map = loader.load( 'img/skin_normal.jpg' );
@@ -97,7 +97,7 @@ AFRAME.registerComponent('decal', {
         uniforms.shininess = { type: "f", value: 10 };
         uniforms.map = { type: "t", value: color_map};
         uniforms.normalMap = { type: "t", value: normal_map};
-        uniforms.normalScale = { type: "v2", value: new THREE.Vector2( 0.25, 0.25 )};
+        uniforms.normalScale = { type: "v2", value: new THREE.Vector2( 0.5, 0.5 )};
         uniforms.shaderSwitch = { type: "i", value: 0 };
         
         var decalMaterial = new THREE.ShaderMaterial( {
@@ -113,6 +113,8 @@ AFRAME.registerComponent('decal', {
             polygonOffset: true,
             polygonOffsetFactor: -4
         } );
+        
+        decalMaterial.extensions.derivatives = true;
         
         // Intersection
         var intersection = {
