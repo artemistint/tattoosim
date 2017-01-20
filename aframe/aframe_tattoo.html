@@ -32,14 +32,14 @@
             
         AFRAME.registerComponent('orient', {
             init: function () {
-                var cam = this.el;
+                var cam = this.cam = this.el;
             },
             
             tick: function(t) {
-                var camRot = cam.getAttribute('rotation');
+                var camRot = this.cam.getAttribute('rotation');
                 camRot.x = Math.min(Math.max(camRot.x, -45), 45);
                 camRot.y = Math.min(Math.max(camRot.y, -45), 45);
-                cam.setAttribute('rotation', { x: camRot.x, y: camRot.y, z: camRot.z });
+                this.cam.setAttribute('rotation', { x: camRot.x, y: camRot.y, z: camRot.z });
             }
         });
             
@@ -121,7 +121,10 @@
         
         <script>
             
-            // SLIDERS
+        var scene = document.querySelector('a-scene');
+        scene.addEventListener('loaded', function() {
+
+            // TATTOO SLIDERS //
             init_slider();
             function init_slider() {
                 
@@ -143,7 +146,7 @@
                 
             }
             
-            // PLUS AND MINUS
+            // PLUS AND MINUS //
             var cam = document.getElementById( 'camera' );
             var plus_button = window.parent.$('#plus')[0];
             plus_button.addEventListener('click', function() {
@@ -174,26 +177,23 @@
                 $('.removable').remove();
             });
             
-            var delay = 2000;
-            
-            setTimeout(function() {
-                var cam_updown_slider = window.parent.$('#cam_updown_slider')[0];
-                cam_updown_slider.noUiSlider.on('update', function( values, handle ) {
-                    var camPos = cam.getAttribute('position');
-                    var cam_y = 1.75 - ((10 - values[handle]) * 0.15);
-                    console.log(values[handle], cam_y);
-                    cam.setAttribute('position', { x: camPos.x, y: cam_y, z: camPos.z });
-                });
-                
-                var cam_leftright_slider = window.parent.$('#cam_leftright_slider')[0];
-                cam_leftright_slider.noUiSlider.on('update', function( values, handle ) {
-                    var target = document.getElementById('target');
-                    var targetRot = target.getAttribute('rotation');
-                    var target_y = values[handle];
-                    target.setAttribute('rotation', { x: targetRot.x, y: target_y, z: targetRot.z });
-                 });
-                
-            }, delay);
+            // CAM SLIDERS //
+            var cam_updown_slider = window.parent.$('#cam_updown_slider')[0];
+            cam_updown_slider.noUiSlider.on('update', function( values, handle ) {
+                var camPos = cam.getAttribute('position');
+                var cam_y = 1.75 - ((10 - values[handle]) * 0.15);
+                cam.setAttribute('position', { x: camPos.x, y: cam_y, z: camPos.z });
+            });
+
+            var cam_leftright_slider = window.parent.$('#cam_leftright_slider')[0];
+            cam_leftright_slider.noUiSlider.on('update', function( values, handle ) {
+                var target = document.getElementById('target');
+                var targetRot = target.getAttribute('rotation');
+                var target_y = values[handle];
+                target.setAttribute('rotation', { x: targetRot.x, y: target_y, z: targetRot.z });
+             });
+
+        });
             
         </script>
         
