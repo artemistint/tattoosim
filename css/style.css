@@ -254,6 +254,8 @@ i.icon {
     display: inline-block !important;
     width: 70%;
     height: 70%;
+    min-height: initial !important;
+    min-width: initial !important;
 }
 
 .dz-image {

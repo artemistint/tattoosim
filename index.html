@@ -66,19 +66,19 @@
                 <div id="gui">
 
                     <div class="container" >
-                        <button class="ui button" id="plus" data-tooltip="Zoom In" data-position="bottom center">
+                        <button class="ui button tips" id="plus" data-tooltip="Zoom In" data-position="bottom center">
                             <i class="black zoom icon"></i>
                         </button>
-                        <button class="ui button" id="minus" data-tooltip="Zoom Out" data-position="bottom center">
+                        <button class="ui button tips" id="minus" data-tooltip="Zoom Out" data-position="bottom center">
                             <i class="black zoom out icon"></i>
                         </button>
                     </div>
                     
                     <div class="container">
-                        <button class="ui button" id="add" data-tooltip="Add Tattoo" data-position="bottom center">
+                        <button class="ui button tips" id="add" data-tooltip="Add Tattoo" data-position="bottom center">
                             <i class="black add square icon"></i>
                         </button>
-                        <button class="ui button" id="remove" data-tooltip="Remove Tattoo" data-position="bottom center">
+                        <button class="ui button tips" id="remove" data-tooltip="Remove Tattoo" data-position="bottom center">
                             <i class="black minus square icon"></i>
                         </button>
                     </div>
@@ -86,10 +86,10 @@
                     <div class="container slider">
 
                         <button class="ui button transform" disabled id="scale_value"></button>
-                        <div class="sliders" id="scale_slider" data-tooltip="Tattoo Scale" data-position="bottom center"></div>
+                        <div class="sliders tips" id="scale_slider" data-tooltip="Tattoo Scale" data-position="bottom center"></div>
 
                         <button class="ui button transform" disabled id="rotation_value"></button>
-                        <div class="sliders" id="rotation_slider" data-tooltip="Tattoo Rotation" data-position="bottom center"></div>
+                        <div class="sliders tips" id="rotation_slider" data-tooltip="Tattoo Rotation" data-position="bottom center"></div>
 
                     </div>
                     
@@ -103,19 +103,19 @@
                     <div class="container slider">
 
                         <button class="ui button transform" disabled id="cam_updown_value"></button>
-                        <div class="sliders" id="cam_updown_slider" data-tooltip="Camera Up / Down" data-position="bottom center"></div>
+                        <div class="sliders tips" id="cam_updown_slider" data-tooltip="Camera Up / Down" data-position="bottom center"></div>
 
                         <button class="ui button transform" disabled id="cam_leftright_value"></button>
-                        <div class="sliders" id="cam_leftright_slider" data-tooltip="Camera Left / Right" data-position="bottom center">
+                        <div class="sliders tips" id="cam_leftright_slider" data-tooltip="Camera Left / Right" data-position="bottom center">
                         </div>
 
                     </div>
 
                     <div class="container">
-                        <button class="ui button" id="hide" data-tooltip="Hide Helper" data-position="bottom center">
+                        <button class="ui button tips" id="hide" data-tooltip="Hide Helper" data-position="bottom center">
                             <i class="black hide icon"></i>
                         </button>
-                        <button class="ui button" id="trash" data-tooltip="Clear Tattoos" data-position="bottom center">
+                        <button class="ui button tips" id="trash" data-tooltip="Clear Tattoos" data-position="bottom center">
                             <i class="black trash outline icon"></i>
                         </button>
                     </div>
@@ -201,6 +201,13 @@
             rotation_slider.noUiSlider.on('update', function() {
                 updateValue(rotation_slider, rotation_value);
             });
+            
+            // MOBILE DESTROY TOOLTIPS //
+            
+            if ( $(window).width() < 780 ){
+                var buttons = document.getElementsByClassName('tips');
+                console.log(buttons, 'DELETE THESE');
+            }
             
             // CAM MOVE //
             

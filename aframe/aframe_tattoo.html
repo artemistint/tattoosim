@@ -37,10 +37,9 @@
             
             tick: function(t) {
                 var camRot = cam.getAttribute('rotation');
-                
-                var y_axis = fit(Math.abs(camRot.y), 30, 60, 0, 1);
-                y_axis = 1 - (clamp(y_axis, 0, 1) * 0.005);
-                cam.setAttribute('rotation', { x: camRot.x, y: camRot.y * y_axis, z: camRot.z });
+                camRot.x = Math.min(Math.max(camRot.x, -45), 45);
+                camRot.y = Math.min(Math.max(camRot.y, -45), 45);
+                cam.setAttribute('rotation', { x: camRot.x, y: camRot.y, z: camRot.z });
             }
         });
             
@@ -181,7 +180,8 @@
                 var cam_updown_slider = window.parent.$('#cam_updown_slider')[0];
                 cam_updown_slider.noUiSlider.on('update', function( values, handle ) {
                     var camPos = cam.getAttribute('position');
-                    var cam_y = 2 - ((10 - values[handle]) * 0.2);
+                    var cam_y = 1.75 - ((10 - values[handle]) * 0.15);
+                    console.log(values[handle], cam_y);
                     cam.setAttribute('position', { x: camPos.x, y: cam_y, z: camPos.z });
                 });
                 
