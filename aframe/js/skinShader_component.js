@@ -31,7 +31,13 @@ AFRAME.registerShader('skin', {
         });
 
         // TEXTURE
-        var textureLoader = new THREE.TextureLoader();
+        var manager = new THREE.LoadingManager();
+		manager.onLoad = function() {
+            window.parent.$('#loading')[0].style.display = "none";
+ 			window.parent.$('#loading_gif')[0].style.display = "none";
+		};
+        
+        var textureLoader = new THREE.TextureLoader(manager);
 
         var mapHeight = textureLoader.load( "human_models/female/spec.jpg" );
 

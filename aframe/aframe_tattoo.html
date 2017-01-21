@@ -71,7 +71,7 @@
         
         <a-scene antialias="false" vr-mode-ui="enabled: false">
             <a-assets>
-                <a-asset-item id="human_obj" src="human_models/female/female_high.OBJ"></a-asset-item>
+                <a-asset-item id="human_obj" src="human_models/female/female_low.OBJ"></a-asset-item>
             </a-assets>
             
             <!-- CAMERA AND RAYCASTER -->
@@ -122,8 +122,9 @@
         <script>
             
         var scene = document.querySelector('a-scene');
+            
         scene.addEventListener('loaded', function() {
-
+            
             // TATTOO SLIDERS //
             init_slider();
             function init_slider() {

@@ -136,7 +136,7 @@ AFRAME.registerComponent('decal', {
         mouseHelper = this.mouseHelper = new THREE.Mesh( new THREE.PlaneGeometry( 1, 1 ), helperMaterial );
         var help_mat = mouseHelper.material;
         help_mat.transparent = true;
-        help_mat.opacity = 0.5;
+        help_mat.opacity = 0.6;
         
         var helper_entity = document.createElement('a-entity');
         helper_entity.setAttribute('id', 'decal');
