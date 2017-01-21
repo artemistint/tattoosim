@@ -76,10 +76,10 @@
                     
                     <div class="container">
                         <button class="ui button tips" id="add" data-tooltip="Add Tattoo" data-position="bottom center">
-                            <i class="black add square icon"></i>
+                            <i class="black checkmark icon"></i>
                         </button>
                         <button class="ui button tips" id="remove" data-tooltip="Remove Tattoo" data-position="bottom center">
-                            <i class="black minus square icon"></i>
+                            <i class="black remove icon"></i>
                         </button>
                     </div>
 
@@ -175,7 +175,7 @@
             }
             
             noUiSlider.create(scale_slider, {
-                start: 50,
+                start: 100,
                 step: 2,
                 connect: [true, false],
                 range: {
@@ -201,13 +201,6 @@
             rotation_slider.noUiSlider.on('update', function() {
                 updateValue(rotation_slider, rotation_value);
             });
-            
-            // MOBILE DESTROY TOOLTIPS //
-            
-            if ( $(window).width() < 780 ){
-                var buttons = document.getElementsByClassName('tips');
-                console.log(buttons, 'DELETE THESE');
-            }
             
             // CAM MOVE //
             

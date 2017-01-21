@@ -17,6 +17,7 @@ AFRAME.registerComponent('decal', {
                     console.log("Loaded!");
                     uniforms.map = { type: "t", value: texture};
                     uniforms.shaderSwitch = { type: "i", value: shaderSwitch };
+                    helperMaterial.map = texture;
                 };
             
             var imageType = evt.detail.name.split(".").pop();
@@ -59,7 +60,7 @@ AFRAME.registerComponent('decal', {
         var manager = new THREE.LoadingManager();
         var loader = new THREE.TextureLoader(manager);
         
-        // Decal Material
+        /*// Decal Material
         var decalMaterial = this.decalMaterial = new THREE.MeshPhongMaterial( { 
             specular: 0x3e444c,
             color: 0x000000,
@@ -72,7 +73,7 @@ AFRAME.registerComponent('decal', {
         });
         
         // NORMAL MATERIAL
-        /*decalMaterial = new THREE.MeshNormalMaterial( { 
+        decalMaterial = new THREE.MeshNormalMaterial( { 
             transparent: true, 
             depthTest: true, 
             depthWrite: false, 
@@ -90,7 +91,7 @@ AFRAME.registerComponent('decal', {
         defines[ "USE_MAP" ] = "";
         defines[ "USE_NORMALMAP" ] = "";
         
-        var color_map = loader.load( 'img/colored.jpg' );
+        var color_map = loader.load( 'img/flower.png' );
         var normal_map = loader.load( 'img/skin_normal.jpg' );
         
         uniforms.specular = { type: "c", value: new THREE.Color( 0x3e444c )};
@@ -98,7 +99,7 @@ AFRAME.registerComponent('decal', {
         uniforms.map = { type: "t", value: color_map};
         uniforms.normalMap = { type: "t", value: normal_map};
         uniforms.normalScale = { type: "v2", value: new THREE.Vector2( 0.5, 0.5 )};
-        uniforms.shaderSwitch = { type: "i", value: 0 };
+        uniforms.shaderSwitch = { type: "i", value: 1 };
         
         var decalMaterial = new THREE.ShaderMaterial( {
             vertexShader: vertexShader,
@@ -123,8 +124,16 @@ AFRAME.registerComponent('decal', {
         };
         
         // Mouse Helper
+        var helperMaterial = new THREE.MeshBasicMaterial( { 
+            map: color_map,
+            depthTest: true, 
+            depthWrite: false, 
+            polygonOffset: true,
+            polygonOffsetFactor: -1000
+        });
+          
         var scene = this.el.sceneEl.object3D;
-        mouseHelper = this.mouseHelper = new THREE.Mesh( new THREE.BoxGeometry( 0.01, 0.01, 0.1 ), new THREE.MeshNormalMaterial() );
+        mouseHelper = this.mouseHelper = new THREE.Mesh( new THREE.PlaneGeometry( 1, 1 ), helperMaterial );
         var help_mat = mouseHelper.material;
         help_mat.transparent = true;
         help_mat.opacity = 0.5;
@@ -199,6 +208,8 @@ AFRAME.registerComponent('decal', {
         var params = this.params;
         params.scale = data.scale;
         params.rotation = data.rotation;
+        this.mouseHelper.scale.set( params.scale, params.scale, params.scale );
+        this.mouseHelper.rotation.z = params.rotation * (Math.PI / 180);
         
     }
 });

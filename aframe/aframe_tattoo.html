@@ -14,6 +14,7 @@
         <script src="js/postprocessing/EffectComposer.js"></script>
         <script src="js/postprocessing/ShaderPass.js"></script>
         <script src="js/shaders/customPhongFragment.js"></script>
+        <script src="js/aframe-animation-component.min.js"></script>
     </head>
     <body>
         
@@ -75,13 +76,12 @@
             
             <!-- CAMERA AND RAYCASTER -->
             <a-camera id="camera" position="0 -0.625 1.5" near="0.001" 
-                      wasd-controls="enabled: false" orient>
+                      wasd-controls="enabled: false" orient
+                      animation="property: position; dur: 250; startEvents: animate; from: 0 1 2; to: 0 1 1">
                 
                 <a-entity id="raycaster_add"
                           raycaster="objects: .clickable"
                           position="0 0 -0.01"
-                          geometry="primitive: ring; radius-inner: 0.000001; radius-outer: 0.0001"
-                          material="color: #e74c3c; shader: flat"
                           ></a-entity>
                 
                 <a-entity id="raycaster_delete"
@@ -146,21 +146,43 @@
                 
             }
             
-            // PLUS AND MINUS //
+            // PLUS AND MINUS //          
             var cam = document.getElementById( 'camera' );
+            var zoomPos = cam.getAttribute('position').z;
+            
             var plus_button = window.parent.$('#plus')[0];
             plus_button.addEventListener('click', function() {
-                var camPos = cam.getAttribute('position');
-                if (camPos.z > 0.25) {
-                    cam.setAttribute('position', { x: camPos.x, y: camPos.y, z: camPos.z - 0.25 });
+                if (zoomPos > 0.25) {
+                    zoomPos -= 0.25;
+                    var fromPos = cam.getAttribute('position');
+                    var toPos = cam.getAttribute('position');
+                    toPos.z = zoomPos;
+
+                    fromPos = [fromPos.x.toString(), fromPos.y.toString(), fromPos.z.toString()];
+                    fromPos = fromPos.join(" ");
+                    toPos = [toPos.x.toString(), toPos.y.toString(), toPos.z.toString()];
+                    toPos = toPos.join(" ");
+
+                    cam.setAttribute('animation', { property: 'position', dur: 250, from: fromPos, to: toPos });
+                    cam.emit('animate');
                 }
             });
 
             var minus_button = window.parent.$('#minus')[0];
             minus_button.addEventListener('click', function() {
-                var camPos = cam.getAttribute('position');
-                if (camPos.z < 2) {
-                    cam.setAttribute('position', { x: camPos.x, y: camPos.y, z: camPos.z + 0.25 });
+                if (zoomPos < 2.0) {
+                    zoomPos += 0.25;
+                    var fromPos = cam.getAttribute('position');
+                    var toPos = cam.getAttribute('position');
+                    toPos.z = zoomPos;
+
+                    fromPos = [fromPos.x.toString(), fromPos.y.toString(), fromPos.z.toString()];
+                    fromPos = fromPos.join(" ");
+                    toPos = [toPos.x.toString(), toPos.y.toString(), toPos.z.toString()];
+                    toPos = toPos.join(" ");
+
+                    cam.setAttribute('animation', { property: 'position', dur: 250, from: fromPos, to: toPos });
+                    cam.emit('animate');
                 }
             });
             

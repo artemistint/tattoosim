@@ -204,8 +204,8 @@ i.icon {
 
 #scale_slider > .noUi-base > .noUi-origin > .noUi-handle:before { content: "\f065"; }
 #rotation_slider > .noUi-base > .noUi-origin > .noUi-handle:before { content: "\f021"; }
-#cam_updown_slider > .noUi-base > .noUi-origin > .noUi-handle:before { content: "\f07d"; }
-#cam_leftright_slider > .noUi-base > .noUi-origin > .noUi-handle:before { content: "\f07e"; }
+#cam_updown_slider > .noUi-base > .noUi-origin > .noUi-handle:before { content: "\f062"; }
+#cam_leftright_slider > .noUi-base > .noUi-origin > .noUi-handle:before { content: "\f061"; }
 
 .noUi-handle:after { display: none; }
 
@@ -282,6 +282,10 @@ i.upload {
 /* QUERIES */
 
 @media only screen and (max-device-width : 768px) {
+    
+    [data-tooltip]:before, [data-tooltip]:after {
+        visibility: hidden !important;
+    }
     
     #section_1 {
         display: flex;
