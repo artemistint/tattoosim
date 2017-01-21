@@ -3,7 +3,6 @@
     <head>
         <title>Human Loader</title>
         <script src="https://aframe.io/releases/0.4.0/aframe.min.js"></script>
-        <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v3.2.2/dist/aframe-extras.min.js"></script>
         
         <script src="js/AFrame.DecalComponent.js"></script>
         <script src="js/THREE.DecalGeometry.js"></script>
@@ -76,9 +75,8 @@
             </a-assets>
             
             <!-- CAMERA AND RAYCASTER -->
-            <a-camera id="camera" position="0 -0.625 1.5" near="0.001" orient
-                      wasd-controls="enabled: false" 
-                      universal-controls="movementEnabled: false; rotationControls: mouse"
+            <a-camera id="camera" position="0 -0.625 1.5" near="0.001" 
+                      wasd-controls="enabled: false" orient
                       animation="property: position; dur: 250; startEvents: animate; from: 0 1 2; to: 0 1 1">
                 
                 <a-entity id="raycaster_add"
