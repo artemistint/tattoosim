@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Tattoo Simulator is web-based 3D tattoo placement application. Upload your own designs and get inspired to try new tattoo ideas on your skin."/>
-        
+
         <link rel="stylesheet" type="text/css" href="css/jquery.fullPage.css"/>
         <link rel="stylesheet" type="text/css" href="css/button.min.css">
         <link rel="stylesheet" type="text/css" href="css/icon.min.css">
@@ -12,20 +12,20 @@
         <link rel="stylesheet" type="text/css" href="css/nouislider.min.css">
         <link rel="stylesheet" type="text/css" href="css/dropzone.css">
         <link rel="stylesheet" type="text/css" href="css/style.css"/>
-        
+
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400" rel="stylesheet">
-        
+
         <title>Tattoo Simulator</title>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script type="text/javascript" src="js/jquery.fullPage.min.js"></script>
         <script src="js/nouislider.min.js"></script>
         <script src="js/dropzone.js"></script>
-        
+
     </head>
-    
+
     <body>
-        
+
         <script>
           (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -36,14 +36,14 @@
           ga('send', 'pageview');
 
         </script>
-        
+
         <div id="fullpage">
             <div class="section" id="section_0">
-                
+
                 <div class="name">
                     <h1>Tattoo<br>&#xb7;<br>Simulator</h1>
                 </div>
-                
+
                 <div class="hero">
                     <h3>Want inspiration and ideas for tattoo designs or placement?</h3>
                     <h2>Tattoo Simulator lets you generate 3D images out of your drawings without installing any mobile tattoo app.</h2>
@@ -51,17 +51,17 @@
                         <p>Start Tattoo!</p>
                     </button>
                 </div>
-                
+
                 <div class="social">
-                    <i onclick="window.open('http://www.instagram.com/tattoosim')" class="inverted instagram icon"></i>
+                    <i onclick="window.open('http://www.instagram.com/tattoosim')" class="inverte d instagram icon"></i>
                     <i onclick="window.open('mailto: tattoosimulator@gmail.com')" class="inverted mail icon"></i>
                     <i onclick="window.open('http://www.tattoosim.com')" class="inverted home icon"></i>
                 </div>
 
             </div>
-            
+
             <div class="section" id="section_1">
-            
+
                 <!-- GUI START -->
                 <div id="gui">
 
@@ -73,7 +73,7 @@
                             <i class="black zoom out icon"></i>
                         </button>
                     </div>
-                    
+
                     <div class="container">
                         <button class="ui button tips" id="add" data-tooltip="Add Tattoo" data-position="bottom center">
                             <i class="black checkmark icon"></i>
@@ -92,14 +92,14 @@
                         <div class="sliders tips" id="rotation_slider" data-tooltip="Tattoo Rotation" data-position="bottom center"></div>
 
                     </div>
-                    
+
                     <div class="container image">
                         <form id="dropzone" action="" class="dropzone needsclick dz-clickable">
                             <i class="black cloud upload icon"></i>
                             <div class="dz-message needsclick">Drop image here or click to upload</div>
                         </form>
                     </div>
-                    
+
                     <div class="container slider">
 
                         <button class="ui button transform" disabled id="cam_updown_value"></button>
@@ -119,63 +119,63 @@
                             <i class="black trash outline icon"></i>
                         </button>
                     </div>
-                    
+
                 </div>
                 <!-- GUI END -->
-                
+
                 <div id="aframe">
                     <div id="loading"></div>
                     <div id="loading_gif"></div>
                     <iframe id="iframe" src="/aframe/aframe_tattoo.html"></iframe>
                 </div>
-                    
+
             </div>
 
             <!--<div class="section fp-auto-height" id="section_2">
                 <div class="footer"></div>
             </div>-->
         </div>
-            
+
         <script>
-            
+
             // INIT
             var anchorIndex;
-            
+
             $(document).ready(function() {
                 $('#fullpage').fullpage({
                     navigation: true,
                     navigationPosition: 'right',
                     navigationTooltips: ['Intro', 'Design', 'Footer'],
-                    
+
                     afterLoad: function(anchorLink, index){
                         anchorIndex = index;
                         if (index == 2) {
                             //console.log("INIT LOAD");
                         }
                     }
-                    
+
                 });
-                
+
                 var initMoveDelay = 5000;
                 setTimeout(function() {
                     if (anchorIndex === 1) {
                         $.fn.fullpage.moveSectionDown();
                     }
                 }, initMoveDelay);
-                
+
             });
-        
+
         </script>
 
         <script>
-            
+
             // SLIDERS //
             updateValue = (slider, value, handle = 0) => {
                 values = slider.noUiSlider.get();
                 values = parseInt(values);
                 value.dataset.value = values;
             }
-            
+
             noUiSlider.create(scale_slider, {
                 start: 100,
                 step: 2,
@@ -185,11 +185,11 @@
                     'max': 100
                 }
             });
-            
+
             scale_slider.noUiSlider.on('update', function() {
                 updateValue(scale_slider, scale_value);
             });
-                
+
             noUiSlider.create(rotation_slider, {
                 start: 0,
                 step: 5,
@@ -199,13 +199,13 @@
                     'max': 180
                 }
             });
-            
+
             rotation_slider.noUiSlider.on('update', function() {
                 updateValue(rotation_slider, rotation_value);
             });
-            
+
             // CAM MOVE //
-            
+
             noUiSlider.create(cam_updown_slider, {
                 start: 0.975 * 5,
                 //step: 0.1,
@@ -216,11 +216,11 @@
                     'max': 10
                 }
             });
-            
+
             cam_updown_slider.noUiSlider.on('update', function() {
                 updateValue(cam_updown_slider, cam_updown_value);
             });
-                
+
             noUiSlider.create(cam_leftright_slider, {
                 start: 0,
                 step: 5,
@@ -230,11 +230,11 @@
                     'max': 180
                 }
             });
-            
+
             cam_leftright_slider.noUiSlider.on('update', function() {
                 updateValue(cam_leftright_slider, cam_leftright_value);
             });
-        
+
             // DROPZONE
             Dropzone.options.dropzone = {
                 url: "/",
@@ -253,8 +253,8 @@
                     });
                 }
             };
-            
+
         </script>
-        
+
     </body>
 </html>
